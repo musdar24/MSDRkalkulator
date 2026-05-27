@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MSDRkulator</title>
+
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ICON -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  overflow:hidden;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+
+  background:
+  radial-gradient(circle at top left,#00e5ff 0%,transparent 25%),
+  radial-gradient(circle at top right,#ff00c8 0%,transparent 25%),
+  radial-gradient(circle at bottom left,#00ff88 0%,transparent 20%),
+  radial-gradient(circle at bottom right,#8a2eff 0%,transparent 25%),
+  linear-gradient(135deg,#030712,#071426,#0b1f3a);
+
+  position:relative;
+  padding:20px;
+}
+
+/* GRID BACKGROUND */
+
+body::before{
+  content:'';
+  position:absolute;
+  inset:0;
+
+  background-image:
+  linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+  background-size:40px 40px;
+}
+
+/* GLOW */
+
+.glow1,
+.glow2{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+}
+
+.glow1{
+  width:300px;
+  height:300px;
+  background:#00d9ff;
+  top:-100px;
+  left:-100px;
+  opacity:.5;
+}
+
+.glow2{
+  width:320px;
+  height:320px;
+  background:#ff00b7;
+  bottom:-120px;
+  right:-100px;
+  opacity:.45;
+}
+
+/* BACK BUTTON */
+
+.back{
+  margin-bottom:25px;
+
+  text-decoration:none;
+  color:white;
+
+  padding:12px 22px;
+
+  border-radius:16px;
+
+  background:rgba(255,255,255,0.08);
+
+  border:1px solid rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(10px);
+
+  transition:.3s;
+
+  z-index:2;
+}
+
+.back:hover{
+  transform:translateY(-4px);
+
+  background:linear-gradient(135deg,#00e5ff,#8a2eff);
+
+  box-shadow:
+  0 0 20px rgba(0,229,255,.3),
+  0 0 40px rgba(138,46,255,.2);
+}
+
+/* CALCULATOR */
+
+.calculator{
+  width:380px;
+
+  padding:30px;
+
+  border-radius:35px;
+
+  background:rgba(255,255,255,0.08);
+
+  border:1px solid rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+  0 20px 60px rgba(0,0,0,.45),
+  0 0 30px rgba(0,229,255,.1);
+
+  position:relative;
+  z-index:2;
+}
+
+/* TITLE */
+
+.title{
+  text-align:center;
+  color:white;
+
+  font-size:36px;
+  font-weight:700;
+
+  margin-bottom:25px;
+}
+
+.title span{
+  background:linear-gradient(to right,#00e5ff,#ff00c8,#8a2eff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* DISPLAY */
+
+.display{
+  width:100%;
+  height:95px;
+
+  border:none;
+  outline:none;
+
+  border-radius:22px;
+
+  padding:20px;
+
+  font-size:38px;
+  font-weight:600;
+
+  text-align:right;
+
+  color:white;
+
+  background:rgba(0,0,0,0.25);
+
+  box-shadow:
+  inset 0 0 15px rgba(0,0,0,.4),
+  0 0 15px rgba(0,229,255,.08);
+
+  margin-bottom:25px;
+}
+
+/* BUTTON GRID */
+
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+/* BUTTON */
+
+button{
+  height:72px;
+
+  border:none;
+  outline:none;
+
+  border-radius:20px;
+
+  font-size:24px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  color:white;
+
+  background:rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(10px);
+
+  transition:.25s;
+
+  box-shadow:
+  0 5px 15px rgba(0,0,0,.25);
+}
+
+button:hover{
+  transform:translateY(-4px) scale(1.04);
+
+  box-shadow:
+  0 0 18px rgba(255,255,255,.1),
+  0 0 25px rgba(0,229,255,.15);
+}
+
+/* OPERATOR */
+
+.operator{
+  background:linear-gradient(135deg,#ff9800,#ff5722);
+}
+
+.operator:hover{
+  box-shadow:
+  0 0 20px rgba(255,152,0,.4);
+}
+
+/* EQUAL */
+
+.equal{
+  background:linear-gradient(135deg,#00e676,#00b85c);
+}
+
+.equal:hover{
+  box-shadow:
+  0 0 20px rgba(0,230,118,.4);
+}
+
+/* CLEAR */
+
+.clear{
+  background:linear-gradient(135deg,#ff3b3b,#ff006a);
+}
+
+.clear:hover{
+  box-shadow:
+  0 0 20px rgba(255,0,106,.4);
+}
+
+/* DELETE */
+
+.delete{
+  background:linear-gradient(135deg,#7b2ff7,#b465ff);
+}
+
+.delete:hover{
+  box-shadow:
+  0 0 20px rgba(180,101,255,.4);
+}
+
+/* ZERO */
+
+.zero{
+  grid-column:span 2;
+}
+
+/* FOOTER */
+
+.footer{
+  margin-top:25px;
+
+  text-align:center;
+
+  color:#d7e5ff;
+
+  font-size:14px;
+
+  line-height:1.8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:480px){
+
+  .calculator{
+    width:100%;
+    padding:22px;
+  }
+
+  .title{
+    font-size:30px;
+  }
+
+  .display{
+    font-size:30px;
+    height:85px;
+  }
+
+  button{
+    height:65px;
+    font-size:22px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- GLOW -->
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<!-- BACK -->
+
+<a href="index.html" class="back">
+<i class="fa-solid fa-arrow-left"></i>
+Kembali
+</a>
+
+<!-- CALCULATOR -->
+
+<div class="calculator">
+
+<h1 class="title">
+🧮 <span>MSDRkulator</span>
+</h1>
+
+<input
+type="text"
+class="display"
+id="display"
+readonly>
+
+<div class="buttons">
+
+<button onclick="clearDisplay()" class="clear">
+C
+</button>
+
+<button onclick="hapus()" class="delete">
+⌫
+</button>
+
+<button onclick="tambah('%')" class="operator">
+%
+</button>
+
+<button onclick="tambah('/')" class="operator">
+÷
+</button>
+
+<button onclick="tambah('7')">7</button>
+<button onclick="tambah('8')">8</button>
+<button onclick="tambah('9')">9</button>
+
+<button onclick="tambah('*')" class="operator">
+×
+</button>
+
+<button onclick="tambah('4')">4</button>
+<button onclick="tambah('5')">5</button>
+<button onclick="tambah('6')">6</button>
+
+<button onclick="tambah('-')" class="operator">
+−
+</button>
+
+<button onclick="tambah('1')">1</button>
+<button onclick="tambah('2')">2</button>
+<button onclick="tambah('3')">3</button>
+
+<button onclick="tambah('+')" class="operator">
++
+</button>
+
+<button onclick="tambah('0')" class="zero">
+0
+</button>
+
+<button onclick="tambah('.')">
+.
+</button>
+
+<button onclick="hasil()" class="equal">
+=
+</button>
+
+</div>
+
+<div class="footer">
+✨ MSDRkulator © 2026 <br>
+Modern Neon Calculator UI
+</div>
+
+</div>
+
+<script>
+
+function tambah(nilai){
+
+  document.getElementById("display").value += nilai;
+
+}
+
+function clearDisplay(){
+
+  document.getElementById("display").value = "";
+
+}
+
+function hapus(){
+
+  let display =
+  document.getElementById("display");
+
+  display.value =
+  display.value.slice(0,-1);
+
+}
+
+function hasil(){
+
+  let display =
+  document.getElementById("display");
+
+  try{
+
+    display.value =
+    eval(display.value);
+
+  }
+
+  catch{
+
+    display.value = "Error";
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>

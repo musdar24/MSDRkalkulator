@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>MSDRkulator</title>
+
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ICON -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  color:white;
+  overflow-x:hidden;
+  position:relative;
+
+  background:
+  radial-gradient(circle at top left,#00e5ff 0%,transparent 25%),
+  radial-gradient(circle at top right,#ff00c8 0%,transparent 25%),
+  radial-gradient(circle at bottom left,#00ff88 0%,transparent 20%),
+  radial-gradient(circle at bottom right,#8a2eff 0%,transparent 25%),
+  linear-gradient(135deg,#030712,#071426,#0b1f3a);
+}
+
+/* BACKGROUND GRID */
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+  linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  z-index:-2;
+}
+
+/* GLOW */
+
+.glow1,
+.glow2{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  z-index:-1;
+}
+
+.glow1{
+  width:320px;
+  height:320px;
+  background:#00d9ff;
+  top:-80px;
+  left:-80px;
+  opacity:.55;
+}
+
+.glow2{
+  width:340px;
+  height:340px;
+  background:#ff00b7;
+  bottom:-120px;
+  right:-100px;
+  opacity:.45;
+}
+
+/* CONTAINER */
+
+.container{
+  width:92%;
+  max-width:1350px;
+  margin:auto;
+  padding:40px 0 70px;
+}
+
+/* TOPBAR */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:70px;
+
+  padding:18px 25px;
+
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+
+  border-radius:24px;
+  backdrop-filter:blur(14px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.logo-icon{
+  width:60px;
+  height:60px;
+  border-radius:18px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:25px;
+
+  background:linear-gradient(135deg,#00e5ff,#ff00c8);
+
+  box-shadow:
+  0 0 20px rgba(0,229,255,.5),
+  0 0 40px rgba(255,0,200,.3);
+}
+
+.logo-text{
+  font-size:26px;
+  font-weight:700;
+}
+
+.logo-text span{
+  background:linear-gradient(to right,#00e5ff,#00ff88,#ff00c8,#8a2eff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* BUTTON */
+
+.top-btn{
+  text-decoration:none;
+  color:white;
+  padding:13px 24px;
+  border-radius:15px;
+  font-weight:600;
+
+  background:linear-gradient(135deg,#00e5ff,#8a2eff);
+
+  transition:.3s;
+}
+
+.top-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:
+  0 0 20px rgba(0,229,255,.4),
+  0 0 35px rgba(138,46,255,.3);
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  margin-bottom:80px;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+
+  padding:12px 22px;
+
+  border-radius:50px;
+
+  background:rgba(255,255,255,0.05);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  color:#d8e7ff;
+
+  margin-bottom:28px;
+
+  backdrop-filter:blur(10px);
+}
+
+.hero h1{
+  font-size:78px;
+  line-height:1.1;
+  margin-bottom:25px;
+  font-weight:800;
+}
+
+.hero h1 span{
+  background:linear-gradient(to right,#00e5ff,#00ff88,#ff00c8,#8a2eff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+  max-width:900px;
+  margin:auto;
+
+  color:#cfe1ff;
+
+  line-height:1.9;
+  font-size:20px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:22px;
+
+  margin-top:50px;
+}
+
+.stat-box{
+  padding:28px;
+
+  border-radius:24px;
+
+  background:rgba(255,255,255,0.05);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(12px);
+
+  transition:.3s;
+}
+
+.stat-box:hover{
+  transform:translateY(-5px);
+
+  box-shadow:
+  0 0 20px rgba(0,229,255,.15),
+  0 0 35px rgba(255,0,200,.1);
+}
+
+.stat-box h2{
+  font-size:35px;
+  margin-bottom:10px;
+}
+
+.stat-box p{
+  color:#cfe1ff;
+}
+
+/* GRID */
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+}
+
+/* CARD */
+
+.menu-card{
+  position:relative;
+  overflow:hidden;
+
+  text-decoration:none;
+  color:white;
+
+  padding:35px;
+
+  border-radius:30px;
+
+  background:rgba(15,25,60,0.72);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(18px);
+
+  transition:.4s;
+
+  box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.menu-card::before{
+  content:'';
+  position:absolute;
+
+  width:230px;
+  height:230px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,0.04);
+
+  top:-120px;
+  right:-100px;
+}
+
+.menu-card:hover{
+  transform:translateY(-12px) scale(1.03);
+
+  border-color:rgba(255,255,255,0.25);
+
+  box-shadow:
+  0 25px 55px rgba(0,0,0,.45),
+  0 0 25px rgba(0,229,255,.25),
+  0 0 45px rgba(255,0,200,.15);
+}
+
+/* ICON */
+
+.icon-box{
+  width:90px;
+  height:90px;
+
+  border-radius:25px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:35px;
+
+  margin-bottom:28px;
+
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+.blue{
+  background:linear-gradient(135deg,#00e5ff,#0066ff);
+}
+
+.green{
+  background:linear-gradient(135deg,#00ff88,#00c853);
+}
+
+.purple{
+  background:linear-gradient(135deg,#8a2eff,#d500ff);
+}
+
+.cyan{
+  background:linear-gradient(135deg,#00f0ff,#00bcd4);
+}
+
+.orange{
+  background:linear-gradient(135deg,#ff9800,#ff5722);
+}
+
+.pink{
+  background:linear-gradient(135deg,#ff00c8,#ff4d8d);
+}
+
+/* TEXT */
+
+.menu-title{
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:14px;
+}
+
+.menu-text{
+  color:#d8e7ff;
+  line-height:1.9;
+  font-size:16px;
+}
+
+/* ARROW */
+
+.arrow{
+  margin-top:28px;
+
+  width:58px;
+  height:58px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,0.08);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:.35s;
+
+  font-size:18px;
+}
+
+.menu-card:hover .arrow{
+  background:linear-gradient(135deg,#00e5ff,#ff00c8);
+
+  color:white;
+
+  transform:translateX(8px) rotate(-10deg);
+}
+
+/* FOOTER */
+
+footer{
+  margin-top:80px;
+
+  text-align:center;
+
+  padding:30px;
+
+  border-radius:24px;
+
+  background:rgba(255,255,255,0.05);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  color:#d7e5ff;
+
+  line-height:1.9;
+
+  backdrop-filter:blur(12px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .hero h1{
+    font-size:55px;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .topbar{
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .hero h1{
+    font-size:42px;
+  }
+
+  .hero p{
+    font-size:16px;
+  }
+
+  .menu-title{
+    font-size:24px;
+  }
+
+  .menu-card{
+    padding:28px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- GLOW -->
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<div class="container">
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+
+    <div class="logo">
+
+      <div class="logo-icon">
+        <i class="fa-solid fa-calculator"></i>
+      </div>
+
+      <div class="logo-text">
+        MSDR<span>kulator</span>
+      </div>
+
+    </div>
+
+    <a href="#" class="top-btn">
+      Mulai Sekarang
+    </a>
+
+  </div>
+
+  <!-- HERO -->
+
+  <div class="hero">
+
+    <div class="hero-badge">
+      <i class="fa-solid fa-bolt"></i>
+      Smart Futuristic Calculator 2026
+    </div>
+
+    <h1>
+      Kalkulator Modern <br>
+      <span>Super Lengkap</span>
+    </h1>
+
+    <p>
+      Platform kalkulator modern dengan desain futuristik
+      neon premium untuk membantu perhitungan matematika,
+      diskon, konversi, grafik fungsi, dan kebutuhan sehari-hari.
+    </p>
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat-box">
+        <h2>6+</h2>
+        <p>Fitur Kalkulator Modern</p>
+      </div>
+
+      <div class="stat-box">
+        <h2>Fast</h2>
+        <p>Ringan dan Cepat Digunakan</p>
+      </div>
+
+      <div class="stat-box">
+        <h2>100%</h2>
+        <p>Responsive Semua Device</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MENU -->
+
+  <div class="menu-grid">
+
+    <!-- UMUM -->
+
+    <a href="umum.html" class="menu-card">
+
+      <div class="icon-box blue">
+        <i class="fa-solid fa-calculator"></i>
+      </div>
+
+      <div class="menu-title">
+        Kalkulator Umum
+      </div>
+
+      <div class="menu-text">
+        Operasi hitung dasar,
+        persen, akar, dan matematika cepat.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+    <!-- DISKON -->
+
+    <a href="diskon.html" class="menu-card">
+
+      <div class="icon-box green">
+        <i class="fa-solid fa-tags"></i>
+      </div>
+
+      <div class="menu-title">
+        Kalkulator Diskon
+      </div>
+
+      <div class="menu-text">
+        Menghitung potongan harga,
+        cashback, dan total pembayaran.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+    <!-- JARAK -->
+
+    <a href="jarak.html" class="menu-card">
+
+      <div class="icon-box purple">
+        <i class="fa-solid fa-car-side"></i>
+      </div>
+
+      <div class="menu-title">
+        Kalkulator Jarak
+      </div>
+
+      <div class="menu-text">
+        Menghitung jarak,
+        waktu tempuh dan kecepatan.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+    <!-- KONVERSI -->
+
+    <a href="konversi.html" class="menu-card">
+
+      <div class="icon-box cyan">
+        <i class="fa-solid fa-repeat"></i>
+      </div>
+
+      <div class="menu-title">
+        Konversi Satuan
+      </div>
+
+      <div class="menu-text">
+        Konversi panjang,
+        berat, suhu, volume dan lainnya.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+    <!-- KEUANGAN -->
+
+    <a href="keuangan.html" class="menu-card">
+
+      <div class="icon-box orange">
+        <i class="fa-solid fa-sack-dollar"></i>
+      </div>
+
+      <div class="menu-title">
+        Kalkulator Keuangan
+      </div>
+
+      <div class="menu-text">
+        Hitung keuntungan usaha,
+        modal dan simulasi keuangan.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+    <!-- DESMOS -->
+
+    <a href="https://www.desmos.com/calculator"
+    target="_blank"
+    class="menu-card">
+
+      <div class="icon-box pink">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+
+      <div class="menu-title">
+        Desmos Graphing
+      </div>
+
+      <div class="menu-text">
+        Membuat grafik fungsi,
+        parabola dan visualisasi modern.
+      </div>
+
+      <div class="arrow">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+
+    </a>
+
+  </div>
+
+  <!-- FOOTER -->
+
+  <footer>
+    ✨ © 2026 MSDRkulator — Futuristic Neon Calculator UI
+  </footer>
+
+</div>
+
+</body>
+</html>
